@@ -1,0 +1,47 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Info Fetcher</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript">
+        function toggleCheckboxes(selectAll) {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = selectAll);
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Fetch Company Information</h1>
+        <form action="{{ url_for('fetch_info') }}" method="POST">
+            <label for="company_name">Company Name:</label>
+            <input type="text" id="company_name" name="company_name" required>
+
+            <h2>Select Sources:</h2>
+            <button type="button" onclick="toggleCheckboxes(true)">Select All</button>
+            <button type="button" onclick="toggleCheckboxes(false)">Deselect All</button>
+
+            <div>
+                <label><input type="checkbox" name="sources" value="IBISWorld"> IBISWorld</label>
+                <label><input type="checkbox" name="sources" value="LinkedIn"> LinkedIn</label>
+                <label><input type="checkbox" name="sources" value="Statista"> Statista</label>
+                <label><input type="checkbox" name="sources" value="Trustpilot"> Trustpilot</label>
+                <label><input type="checkbox" name="sources" value="YahooFinance"> Yahoo Finance</label>
+                <label><input type="checkbox" name="sources" value="GoogleTrends"> Google Trends</label>
+                <label><input type="checkbox" name="sources" value="GoogleSearch"> Google Search</label>
+                <label><input type="checkbox" name="sources" value="News"> News</label>
+                <label><input type="checkbox" name="sources" value="Wikipedia"> Wikipedia</label>
+                <label><input type="checkbox" name="sources" value="X.com"> X.com (Twitter)</label>
+            </div>
+
+            <h2>Options:</h2>
+            <label><input type="checkbox" name="analyze_sentiment"> Analyze Sentiment in News Articles</label>
+            <label><input type="checkbox" name="summarize_news"> Summarize News Articles</label>
+
+            <button type="submit">Fetch Info</button>
+        </form>
+    </div>
+</body>
+</html>

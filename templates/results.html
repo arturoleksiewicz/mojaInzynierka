@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Information - {{ company_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .section h2 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            color: #0073b1;
+            border-bottom: 2px solid #0073b1;
+            padding-bottom: 5px;
+        }
+
+        .section p {
+            margin: 10px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .section a {
+            color: #0073b1;
+            text-decoration: none;
+        }
+
+        .section a:hover {
+            text-decoration: underline;
+        }
+
+        .table-container {
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        .stat-list ul,
+        .google-search-results ul,
+        .news-data ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .stat-list li,
+        .google-search-results li,
+        .news-data li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .stat-list li a,
+        .google-search-results li a,
+        .news-data li a {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .stat-list li a:hover,
+        .google-search-results li a:hover,
+        .news-data li a:hover {
+            text-decoration: underline;
+        }
+
+        .wikipedia-summary {
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        .wikipedia-categories {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .wikipedia-url {
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #0073b1;
+            text-decoration: none;
+        }
+
+        .wikipedia-url:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Company Information - {{ company_name }}</h1>
+
+        <!-- LinkedIn Data Section -->
+        <!-- LinkedIn Data Section -->
+<section class="section">
+    {% if linkedin_data %}
+    <h2>LinkedIn Data</h2>
+    <div class="linkedin-data">
+        <p><strong>Company Name:</strong> {{ linkedin_data.get('Company Name', 'N/A') }}</p>
+        <p><strong>Tagline:</strong> {{ linkedin_data.get('Tagline', 'N/A') }}</p>
+        <p><strong>Description:</strong> {{ linkedin_data.get('Description', 'N/A') }}</p>
+        <p><strong>Website:</strong> <a href="{{ linkedin_data.get('Website', '#') }}" target="_blank">{{ linkedin_data.get('Website', 'N/A') }}</a></p>
+        <p><strong>Employee Count:</strong> {{ linkedin_data.get('Staff Count', 'N/A') }}</p>
+        <p><strong>Industries:</strong> {{ ', '.join(linkedin_data.get('Industries', [])) }}</p>
+    </div>
+
+    <!-- Affiliated Companies Section -->
+    <h3>Affiliated Companies:</h3>
+    <ul class="affiliated-companies">
+        {% for company in linkedin_data.get('Affiliated Companies', []) %}
+            <li>
+                <p><strong>Company Name:</strong> {{ company['Name'] }}</p>
+                <p><strong>Description:</strong> {{ company['Description'] }}</p>
+                <p><strong>Website:</strong> <a href="{{ company['Website'] }}" target="_blank">{{ company['Website'] }}</a></p>
+                <p><strong>Followers:</strong> {{ company['Followers'] }}</p>
+                <p><strong>Industries:</strong> {{ ', '.join(company['Industries']) }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Specialties Section -->
+    <h3>Specialties:</h3>
+    <p>{{ ', '.join(linkedin_data.get('Specialties', [])) }}</p>
+
+    <!-- Headquarters Section -->
+    <h3>Headquarters:</h3>
+    <p>{{ linkedin_data.get('Headquarters', {}).get('city', 'N/A') }}, {{ linkedin_data.get('Headquarters', {}).get('country', 'N/A') }}</p>
+    {% else %}
+        <p>No LinkedIn data available for this company.</p>
+    {% endif %}
+</section>
+
+
+        <!-- Trustpilot Data Section -->
+        <section class="section">
+            <h2>Trustpilot Data</h2>
+            {% if company_info['Trustpilot Data'] %}
+                <ul class="stat-list">
+                    {% for title, link, reviews in company_info['Trustpilot Data'] %}
+                        <li><a href="{{ link }}" target="_blank">{{ title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Trustpilot data available.</p>
+            {% endif %}
+        </section>
+
+        <!-- Statista Data Section -->
+        <section class="section">
+            <h2>Statista Data</h2>
+            {% if company_info['Statista Data'] %}
+                <ul class="stat-list">
+                    {% for item in company_info['Statista Data'] %}
+    {% if item|length == 3 %}
+        <li><a href="{{ item[1] }}" target="_blank">{{ item[0] }}</a>
+        <p>{{ item[2] }}</p></li>
+    {% elif item|length == 2 %}
+        <li><a href="{{ item[1] }}" target="_blank">{{ item[0] }}</a></li>
+    {% else %}
+        <li>{{ item[0] }}</li>
+    {% endif %}
+{% endfor %}
+
+                </ul>
+            {% else %}
+                <p>No Statista data available.</p>
+            {% endif %}
+        </section>
+
+        <!-- Yahoo Finance Data Section -->
+        <section class="section">
+            <h2>Yahoo Finance Data</h2>
+            {% if company_info['Yahoo Finance Data'] %}
+                <p><strong>Company Name:</strong> {{ company_info['Yahoo Finance Data']['Matched Company Name'] }}</p>
+                <p><strong>Ticker Symbol:</strong> {{ company_info['Yahoo Finance Data']['Ticker Symbol'] }}</p>
+                <h3>Stock Data (Last Month):</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Open</th>
+                                <th>High</th>
+                                <th>Low</th>
+                                <th>Close</th>
+                                <th>Volume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    {% for row in company_info['Yahoo Finance Data']['Stock Data'] %}
+    <tr>
+        <td>{{ row['Date'] }}</td>
+        <td>{{ row['Open'] }}</td>
+        <td>{{ row['High'] }}</td>
+        <td>{{ row['Low'] }}</td>
+        <td>{{ row['Close'] }}</td>
+        <td>{{ row['Volume'] }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+                    </table>
+                </div>
+            {% else %}
+                <p>No Yahoo Finance data available.</p>
+            {% endif %}
+        </section>
+
+        <!-- Google Search Results Section -->
+        <section class="section google-search-results">
+            <h2>Google Search Results</h2>
+            {% if google_search_results %}
+                <ul>
+                    {% for result in google_search_results %}
+                        <li>
+                            <a href="{{ result['link'] }}" target="_blank">{{ result['title'] }}</a>
+                            <p>{{ result['snippet'] }}</p>
+                            <p><strong>Source:</strong> {{ result['source'] }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Google Search results available.</p>
+            {% endif %}
+        </section>
+
+        <!-- News Data Section -->
+        <section class="section news-data">
+            <h2>News Data</h2>
+            <ul>
+                {% if news_data %}
+                    {% for news in news_data %}
+                        <li>
+                            <h3>{{ news['title'] }}</h3>
+                            <p><strong>Content:</strong> <a href="{{ news['url'] }}" target="_blank">{{ news['url'] }}</a></p>
+                            <p><strong>Article Content:</strong> {{ news['content'] }}</p>
+                            {% if news['summary'] %}
+                            <p><strong>Summary:</strong> {{ news['summary'] }}</p>
+                            {% endif %}
+                            {% if news['sentiment'] != 'Not analyzed' %}
+                            <p><strong>Sentiment:</strong> {{ news['sentiment'] }}</p>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <p>No news data available.</p>
+                {% endif %}
+            </ul>
+        </section>
+
+        <!-- Google Trends Image Section -->
+        <section class="section">
+            <h2>Google Trends Image</h2>
+            {% if google_trends_image %}
+                <img src="{{ url_for('custom_static', filename=google_trends_image.split('/')[-1]) }}" alt="Google Trends Image">
+            {% else %}
+                <p>No Google Trends data available.</p>
+            {% endif %}
+        </section>
+
+        <!-- Wikipedia Data Section -->
+        <section class="section">
+            <h2>Wikipedia Data</h2>
+            {% if 'Wikipedia Data' in company_info %}
+                <p class="wikipedia-summary">{{ company_info['Wikipedia Data']['Summary'] }}</p>
+                <div class="wikipedia-categories">
+                    <strong>Categories:</strong> {{ ', '.join(company_info['Wikipedia Data']['Categories']) }}
+                </div>
+                <a href="{{ company_info['Wikipedia Data']['URL'] }}" class="wikipedia-url" target="_blank">
+                    Read more on Wikipedia
+                </a>
+            {% else %}
+                <p>No Wikipedia data available for this company.</p>
+            {% endif %}
+        </section>
+
+        <!-- IBISWorld Data Section -->
+        <section class="section">
+            <h2>IBISWorld Data</h2>
+            {% if company_info['IBISWorld Data'] %}
+                <ul class="stat-list">
+                    {% for title, link in company_info['IBISWorld Data'] %}
+                        <li><a href="{{ link }}" target="_blank">{{ title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No IBISWorld data available.</p>
+            {% endif %}
+        </section>
+
+        <!-- X.com (Twitter) Data Section -->
+        <section class="section">
+            <h2>X.com (Twitter) Data</h2>
+            {% if company_info['X.com Tweets'] %}
+                <p><strong>Username:</strong> {{ company_info['X.com Tweets']['name'] }}</p>
+                <p><strong>Bio:</strong> {{ company_info['X.com Tweets']['bio'] }}</p>
+                <p><strong>Followers:</strong> {{ company_info['X.com Tweets']['followers_count'] }}</p>
+                <p><strong>Following:</strong> {{ company_info['X.com Tweets']['following_count'] }}</p>
+                <h3>Recent Tweets:</h3>
+                <ul class="stat-list">
+                    {% for tweet in company_info['X.com Tweets']['tweets'] %}
+                        <li>{{ tweet['time'] }}: {{ tweet['text'] }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No X.com tweets available.</p>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>
