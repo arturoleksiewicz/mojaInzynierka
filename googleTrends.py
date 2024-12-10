@@ -22,7 +22,7 @@ class GoogleTrendsFetcher:
                 plt.tight_layout()
                 output_path = f'static/{keyword}_interest_over_time.png'
                 plt.savefig(output_path)
-                plt.show()
+              #  plt.show()
                 return output_path
             except pytrends.exceptions.TooManyRequestsError:
                 print(f"Too many requests error on attempt {attempt + 1}. Retrying after delay...")

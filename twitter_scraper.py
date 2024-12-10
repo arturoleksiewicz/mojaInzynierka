@@ -9,7 +9,7 @@ import time
 
 
 
-def scrape_recent_tweets(username: str, tweet_count: int = 10) -> dict:
+def scrape_recent_tweets(username: str, tweet_count: int = 1) -> dict:
     """
     Scrape the most recent tweets from a Twitter profile.
     :param username: Twitter username without '@'

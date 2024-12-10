@@ -1,3 +1,4 @@
+
 import random
 import time
 import requests
@@ -12,10 +13,13 @@ from yahooFinance import YahooFinanceFetcher
 from wikipedia_fetcher import WikipediaFetcher
 from newsapi_fetcher import NewsAPIFetcher
 from twitter_scraper import scrape_recent_tweets
+from shodan_fetcher import ShodanFetcher
+from hackertarget_fetcher import HackerTargetFetcher
+from vt_fetcher import VirusTotalFetcher
+
 
 warnings.filterwarnings('ignore', category=UserWarning, module='bs4')
 warnings.filterwarnings('ignore', category=FutureWarning, module='transformers')
-
 
 class CompanyInfoFetcher:
     def __init__(self, company_name, selected_sources, analyze_sentiment=False, summarize_articles=False):
@@ -56,6 +60,17 @@ class CompanyInfoFetcher:
 
         if "X.com" in selected_sources:
             self.twitter_username = company_name  # Assuming the company_name is the Twitter username
+
+        if "Shodan" in selected_sources:
+            self.shodan_fetcher = ShodanFetcher(api_key="JGoNDkBK729GYLe0ofEVYtQvHuE6FBmV")
+
+        if "HackerTarget" in selected_sources:
+            self.hackertarget_fetcher = HackerTargetFetcher()
+
+
+        if "VirusTotal" in selected_sources:
+            self.virustotal_fetcher = VirusTotalFetcher(
+                api_key="964657e55676c6ab97a21a9e8cda62fad825c3c2b8d30306822653b7a661fa90")
 
     def fetch_all_info(self):
         company_info = {}
@@ -102,6 +117,18 @@ class CompanyInfoFetcher:
 
         if "X.com" in self.selected_sources:
             company_info["X.com Tweets"] = scrape_recent_tweets(self.twitter_username)
+
+        if "Shodan" in self.selected_sources:
+            company_info["Shodan Data"] = self.shodan_fetcher.fetch_shodan_info(self.company_name)
+
+        if "HackerTarget" in self.selected_sources:
+            company_info["HackerTarget Data"] = self.hackertarget_fetcher.run_all_hackertarget_functions(
+                self.company_name
+            )
+
+
+        if "VirusTotal" in self.selected_sources:
+            company_info["VirusTotal Data"] = self.virustotal_fetcher.check_website_in_virustotal(self.company_name)
 
         return company_info
 

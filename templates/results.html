@@ -6,52 +6,54 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
             margin: 0;
             padding: 20px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #0056b3;
             font-size: 2em;
             margin-bottom: 20px;
         }
 
         .section {
-            margin-bottom: 30px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #fff;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .section h2 {
             font-size: 1.6em;
-            margin-bottom: 15px;
-            color: #0073b1;
-            border-bottom: 2px solid #0073b1;
+            margin-bottom: 10px;
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
             padding-bottom: 5px;
         }
 
-        .section p {
-            margin: 10px 0;
-            font-size: 1.1em;
-            color: #555;
+        .section p,
+        .section li {
+            color: #333;
+            line-height: 1.6;
+            font-size: 1em;
         }
 
         .section a {
-            color: #0073b1;
+            color: #0056b3;
             text-decoration: none;
         }
 
@@ -59,75 +61,72 @@
             text-decoration: underline;
         }
 
-        .table-container {
-            margin-top: 15px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.95em;
+            background-color: #ffffff;
+            color: #333;
+            margin-top: 10px;
         }
 
         th, td {
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #f9f9f9;
+            background-color: #e6e6e6;
             font-weight: bold;
         }
 
-        .stat-list ul,
-        .google-search-results ul,
-        .news-data ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-        .stat-list li,
-        .google-search-results li,
-        .news-data li {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .stat-list li a,
-        .google-search-results li a,
-        .news-data li a {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .stat-list li a:hover,
-        .google-search-results li a:hover,
-        .news-data li a:hover {
-            text-decoration: underline;
-        }
-
-        .wikipedia-summary {
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-
-        .wikipedia-categories {
-            margin-top: 10px;
+        .code-block {
+            background-color: #e6e6e6;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow-x: auto;
+            color: #333;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 0.9em;
-            color: #777;
         }
 
-        .wikipedia-url {
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
             margin-top: 10px;
-            font-size: 1.1em;
-            color: #0073b1;
-            text-decoration: none;
         }
 
-        .wikipedia-url:hover {
-            text-decoration: underline;
+        ul {
+            padding-left: 20px;
+        }
+
+        ul.stat-list {
+            list-style: disc;
+            margin-top: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .section h2 {
+                font-size: 1.4em;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 0.85em;
+            }
         }
     </style>
 </head>
@@ -136,45 +135,37 @@
         <h1>Company Information - {{ company_name }}</h1>
 
         <!-- LinkedIn Data Section -->
-        <!-- LinkedIn Data Section -->
-<section class="section">
-    {% if linkedin_data %}
-    <h2>LinkedIn Data</h2>
-    <div class="linkedin-data">
-        <p><strong>Company Name:</strong> {{ linkedin_data.get('Company Name', 'N/A') }}</p>
-        <p><strong>Tagline:</strong> {{ linkedin_data.get('Tagline', 'N/A') }}</p>
-        <p><strong>Description:</strong> {{ linkedin_data.get('Description', 'N/A') }}</p>
-        <p><strong>Website:</strong> <a href="{{ linkedin_data.get('Website', '#') }}" target="_blank">{{ linkedin_data.get('Website', 'N/A') }}</a></p>
-        <p><strong>Employee Count:</strong> {{ linkedin_data.get('Staff Count', 'N/A') }}</p>
-        <p><strong>Industries:</strong> {{ ', '.join(linkedin_data.get('Industries', [])) }}</p>
-    </div>
-
-    <!-- Affiliated Companies Section -->
-    <h3>Affiliated Companies:</h3>
-    <ul class="affiliated-companies">
-        {% for company in linkedin_data.get('Affiliated Companies', []) %}
-            <li>
-                <p><strong>Company Name:</strong> {{ company['Name'] }}</p>
-                <p><strong>Description:</strong> {{ company['Description'] }}</p>
-                <p><strong>Website:</strong> <a href="{{ company['Website'] }}" target="_blank">{{ company['Website'] }}</a></p>
-                <p><strong>Followers:</strong> {{ company['Followers'] }}</p>
-                <p><strong>Industries:</strong> {{ ', '.join(company['Industries']) }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-
-    <!-- Specialties Section -->
-    <h3>Specialties:</h3>
-    <p>{{ ', '.join(linkedin_data.get('Specialties', [])) }}</p>
-
-    <!-- Headquarters Section -->
-    <h3>Headquarters:</h3>
-    <p>{{ linkedin_data.get('Headquarters', {}).get('city', 'N/A') }}, {{ linkedin_data.get('Headquarters', {}).get('country', 'N/A') }}</p>
-    {% else %}
-        <p>No LinkedIn data available for this company.</p>
-    {% endif %}
-</section>
-
+        <section class="section">
+            {% if linkedin_data %}
+                <h2>LinkedIn Data</h2>
+                <div class="linkedin-data">
+                    <p><strong>Company Name:</strong> {{ linkedin_data.get('Company Name', 'N/A') }}</p>
+                    <p><strong>Tagline:</strong> {{ linkedin_data.get('Tagline', 'N/A') }}</p>
+                    <p><strong>Description:</strong> {{ linkedin_data.get('Description', 'N/A') }}</p>
+                    <p><strong>Website:</strong> <a href="{{ linkedin_data.get('Website', '#') }}" target="_blank">{{ linkedin_data.get('Website', 'N/A') }}</a></p>
+                    <p><strong>Employee Count:</strong> {{ linkedin_data.get('Staff Count', 'N/A') }}</p>
+                    <p><strong>Industries:</strong> {{ ', '.join(linkedin_data.get('Industries', [])) }}</p>
+                </div>
+                <h3>Affiliated Companies:</h3>
+                <ul class="affiliated-companies">
+                    {% for company in linkedin_data.get('Affiliated Companies', []) %}
+                        <li>
+                            <p><strong>Company Name:</strong> {{ company['Name'] }}</p>
+                            <p><strong>Description:</strong> {{ company['Description'] }}</p>
+                            <p><strong>Website:</strong> <a href="{{ company['Website'] }}" target="_blank">{{ company['Website'] }}</a></p>
+                            <p><strong>Followers:</strong> {{ company['Followers'] }}</p>
+                            <p><strong>Industries:</strong> {{ ', '.join(company['Industries']) }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <h3>Specialties:</h3>
+                <p>{{ ', '.join(linkedin_data.get('Specialties', [])) }}</p>
+                <h3>Headquarters:</h3>
+                <p>{{ linkedin_data.get('Headquarters', {}).get('city', 'N/A') }}, {{ linkedin_data.get('Headquarters', {}).get('country', 'N/A') }}</p>
+            {% else %}
+                <p>No LinkedIn data available for this company.</p>
+            {% endif %}
+        </section>
 
         <!-- Trustpilot Data Section -->
         <section class="section">
@@ -196,16 +187,17 @@
             {% if company_info['Statista Data'] %}
                 <ul class="stat-list">
                     {% for item in company_info['Statista Data'] %}
-    {% if item|length == 3 %}
-        <li><a href="{{ item[1] }}" target="_blank">{{ item[0] }}</a>
-        <p>{{ item[2] }}</p></li>
-    {% elif item|length == 2 %}
-        <li><a href="{{ item[1] }}" target="_blank">{{ item[0] }}</a></li>
-    {% else %}
-        <li>{{ item[0] }}</li>
-    {% endif %}
-{% endfor %}
-
+                        {% if item|length == 3 %}
+                            <li>
+                                <a href="{{ item[1] }}" target="_blank">{{ item[0] }}</a>
+                                <p>{{ item[2] }}</p>
+                            </li>
+                        {% elif item|length == 2 %}
+                            <li><a href="{{ item[1] }}" target="_blank">{{ item[0] }}</a></li>
+                        {% else %}
+                            <li>{{ item[0] }}</li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             {% else %}
                 <p>No Statista data available.</p>
@@ -223,7 +215,6 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Date</th>
                                 <th>Open</th>
                                 <th>High</th>
                                 <th>Low</th>
@@ -232,22 +223,78 @@
                             </tr>
                         </thead>
                         <tbody>
-    {% for row in company_info['Yahoo Finance Data']['Stock Data'] %}
-    <tr>
-        <td>{{ row['Date'] }}</td>
-        <td>{{ row['Open'] }}</td>
-        <td>{{ row['High'] }}</td>
-        <td>{{ row['Low'] }}</td>
-        <td>{{ row['Close'] }}</td>
-        <td>{{ row['Volume'] }}</td>
-    </tr>
-    {% endfor %}
-</tbody>
-
+                            {% for row in company_info['Yahoo Finance Data']['Stock Data'] %}
+                                <tr>
+                                    <td>{{ row['Open'] }}</td>
+                                    <td>{{ row['High'] }}</td>
+                                    <td>{{ row['Low'] }}</td>
+                                    <td>{{ row['Close'] }}</td>
+                                    <td>{{ row['Volume'] }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             {% else %}
                 <p>No Yahoo Finance data available.</p>
+            {% endif %}
+        </section>
+
+        <!-- Shodan Data Section -->
+        <section class="section">
+            <h2>Shodan Data</h2>
+            {% if company_info['Shodan Data'] %}
+                <p><strong>IP:</strong> {{ company_info['Shodan Data']['IP'] }}</p>
+                <p><strong>Country:</strong> {{ company_info['Shodan Data']['Country'] }}</p>
+                <p><strong>City:</strong> {{ company_info['Shodan Data']['City'] }}</p>
+                <p><strong>ISP:</strong> {{ company_info['Shodan Data']['ISP'] }}</p>
+                <p><strong>Organization:</strong> {{ company_info['Shodan Data']['Organization'] }}</p>
+                <p><strong>Coordinates:</strong> {{ company_info['Shodan Data']['Coordinates'] }}</p>
+                <h3>Domains:</h3>
+                <div class="code-block">
+                    <pre>{{ ', '.join(company_info['Shodan Data']['Domains']) }}</pre>
+                </div>
+                <h3>Hostnames:</h3>
+                <div class="code-block">
+                    <pre>{{ ', '.join(company_info['Shodan Data']['Hostnames']) }}</pre>
+                </div>
+                <h3>Vulnerabilities:</h3>
+                <ul>
+                    {% for vuln in company_info['Shodan Data']['Vulnerabilities'] %}
+                        <li><strong>{{ vuln['CVE'] }}</strong>: {{ vuln['Summary'] }}</li>
+                    {% endfor %}
+                </ul>
+                <h3>Open Ports:</h3>
+                <ul>
+                    {% for port_info in company_info['Shodan Data']['Open Ports'] %}
+                        <li>
+                            <p><strong>Port:</strong> {{ port_info['Port'] }}</p>
+                            <p><strong>Service:</strong> {{ port_info['Service'] }}</p>
+                            <p><strong>Version:</strong> {{ port_info['Version'] }}</p>
+                            <div class="code-block">
+                                <pre>Banner: {{ port_info['Banner'] }}
+SSL Certificate: {{ port_info['SSL Certificate'] }}</pre>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Shodan data available for this domain.</p>
+            {% endif %}
+        </section>
+
+        <!-- HackerTarget Data Section -->
+        <section class="section">
+            <h2>HackerTarget Data</h2>
+            {% if company_info['HackerTarget Data'] %}
+                {% for function, result in company_info['HackerTarget Data'].items() %}
+                    <h3>{{ function }}</h3>
+                    <div class="code-block">
+                        <pre>{{ result }}</pre>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No HackerTarget data available.</p>
             {% endif %}
         </section>
 
@@ -269,6 +316,7 @@
             {% endif %}
         </section>
 
+
         <!-- News Data Section -->
         <section class="section news-data">
             <h2>News Data</h2>
@@ -280,10 +328,10 @@
                             <p><strong>Content:</strong> <a href="{{ news['url'] }}" target="_blank">{{ news['url'] }}</a></p>
                             <p><strong>Article Content:</strong> {{ news['content'] }}</p>
                             {% if news['summary'] %}
-                            <p><strong>Summary:</strong> {{ news['summary'] }}</p>
+                                <p><strong>Summary:</strong> {{ news['summary'] }}</p>
                             {% endif %}
                             {% if news['sentiment'] != 'Not analyzed' %}
-                            <p><strong>Sentiment:</strong> {{ news['sentiment'] }}</p>
+                                <p><strong>Sentiment:</strong> {{ news['sentiment'] }}</p>
                             {% endif %}
                         </li>
                     {% endfor %}
