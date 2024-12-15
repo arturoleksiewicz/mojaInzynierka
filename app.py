@@ -35,11 +35,6 @@ def fetch_info():
     trustpilot_data = company_info.get('Trustpilot Data', [])
     if isinstance(trustpilot_data, str):
         trustpilot_data = []
-    if 'Yahoo Finance Data' in company_info and 'Stock Data' in company_info['Yahoo Finance Data']:
-        company_info['Yahoo Finance Data']['Stock Data'] = company_info['Yahoo Finance Data']['Stock Data'].to_dict(
-            orient='records')
-
-    # Store the company info and company name in the session for future use in the download route
     session['company_info'] = company_info
     session['company_name'] = company_name
 
@@ -54,6 +49,7 @@ def fetch_info():
         company_info=company_info,
         trustpilot_data=trustpilot_data,
     )
+
 
 @app.route('/static/<path:filename>')
 def custom_static(filename):

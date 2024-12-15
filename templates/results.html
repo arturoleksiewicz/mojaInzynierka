@@ -219,6 +219,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Open</th>
                                 <th>High</th>
                                 <th>Low</th>
@@ -229,6 +230,7 @@
                         <tbody>
                             {% for row in company_info['Yahoo Finance Data']['Stock Data'] %}
                                 <tr>
+                                    <td>{{ row['Date'] }}</td>
                                     <td>{{ row['Open'] }}</td>
                                     <td>{{ row['High'] }}</td>
                                     <td>{{ row['Low'] }}</td>
@@ -243,6 +245,7 @@
                 <p>No Yahoo Finance data available.</p>
             {% endif %}
         </section>
+
 
         <!-- Shodan Data Section -->
         <section class="section">

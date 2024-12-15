@@ -98,7 +98,7 @@ class CompanyInfoFetcher:
             company_info["Yahoo Finance Data"] = {
                 "Matched Company Name": matched_company_name,
                 "Ticker Symbol": ticker_symbol,
-                "Stock Data": yahoo_finance_data
+                "Stock Data": yahoo_finance_data  # Teraz zawiera daty
             }
 
         if "GoogleTrends" in self.selected_sources:

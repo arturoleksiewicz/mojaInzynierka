@@ -24,17 +24,31 @@ class YahooFinanceFetcher:
 
                 if history.empty:
                     print(f"No stock data available for ticker symbol: {ticker_symbol}")
-                    return matched_company_name, ticker_symbol, "No stock data available"
+                    return matched_company_name, ticker_symbol, []
 
                 print(f"Stock data retrieved for {ticker_symbol}:")
                 print(history.head())
 
-                return matched_company_name, ticker_symbol, history
+                # Format data into a list of dictionaries with dates included
+                stock_data = [
+                    {
+                        "Date": date.strftime('%Y-%m-%d'),
+                        "Open": row["Open"],
+                        "High": row["High"],
+                        "Low": row["Low"],
+                        "Close": row["Close"],
+                        "Volume": row["Volume"]
+                    }
+                    for date, row in history.iterrows()
+                ]
+
+                return matched_company_name, ticker_symbol, stock_data
 
             except Exception as e:
                 print(f"Error fetching stock data for {ticker_symbol}: {e}")
-                return matched_company_name, ticker_symbol, "Error fetching stock data"
+                return matched_company_name, ticker_symbol, []
 
         else:
             print(f"No match found for company name: {company_name}")
-            return None, None, f"Company name '{company_name}' not found in the list."
+            return None, None, []
+
