@@ -170,10 +170,14 @@
         <!-- Trustpilot Data Section -->
         <section class="section">
             <h2>Trustpilot Data</h2>
-            {% if company_info['Trustpilot Data'] %}
+            {% if trustpilot_data %}
                 <ul class="stat-list">
-                    {% for title, link, reviews in company_info['Trustpilot Data'] %}
-                        <li><a href="{{ link }}" target="_blank">{{ title }}</a></li>
+                    {% for title, link, reviews in trustpilot_data %}
+                        <li>
+                            <h3><a href="{{ link }}" target="_blank">{{ title }}</a></h3>
+                            <p><strong>Review Count:</strong> {{ reviews['review_count'] }}</p>
+                            <p><strong>Average Score:</strong> {{ reviews['average_score'] }}</p>
+                        </li>
                     {% endfor %}
                 </ul>
             {% else %}

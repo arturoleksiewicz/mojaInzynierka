@@ -32,7 +32,9 @@ def fetch_info():
     news_data = company_info.get('News Data', [])
     google_search_results = company_info.get('Google Search Results', [])
     google_trends_image = company_info.get('Google Trends Image', None)
-
+    trustpilot_data = company_info.get('Trustpilot Data', [])
+    if isinstance(trustpilot_data, str):
+        trustpilot_data = []
     if 'Yahoo Finance Data' in company_info and 'Stock Data' in company_info['Yahoo Finance Data']:
         company_info['Yahoo Finance Data']['Stock Data'] = company_info['Yahoo Finance Data']['Stock Data'].to_dict(
             orient='records')
@@ -50,6 +52,7 @@ def fetch_info():
         google_search_results=google_search_results,
         google_trends_image=google_trends_image,
         company_info=company_info,
+        trustpilot_data=trustpilot_data,
     )
 
 @app.route('/static/<path:filename>')
