@@ -27,9 +27,10 @@ class CompanyInfoFetcher:
         self.selected_sources = selected_sources
         self.analyze_sentiment = analyze_sentiment
         self.summarize_articles = summarize_articles
-
+        if "GoogleTrends" in selected_sources:
+            self.google_trends_fetcher = GoogleTrendsFetcher()
         if "IBISWorld" in selected_sources:
-            self.ibisworld_fetcher = IbisWorldFetcher()
+            self.ibisworld_fetcher = IbisWorldFetcher(serp_api_key="e4017084ad01edc1cad1f43656c4551b6723ef1e76f6cb6e208cd7d0a2291587")
 
         if "LinkedIn" in selected_sources:
             self.linkedin_fetcher = LinkedinFetcher(username="artur.oleksiewicz.work@gmail.com", password="Sto1noga$")
@@ -43,8 +44,7 @@ class CompanyInfoFetcher:
         if "YahooFinance" in selected_sources:
             self.yahoofinance_fetcher = YahooFinanceFetcher(file_path="nasdaqList.csv")
 
-        if "GoogleTrends" in selected_sources:
-            self.google_trends_fetcher = GoogleTrendsFetcher()
+
 
         if "GoogleSearch" in selected_sources:
             self.google_search_fetcher = GoogleSearchFetcher(
@@ -74,7 +74,9 @@ class CompanyInfoFetcher:
 
     def fetch_all_info(self):
         company_info = {}
-
+        if "GoogleTrends" in self.selected_sources:
+            company_info["Google Trends Image"] = self._retry_request(self.google_trends_fetcher.fetch_google_trends,
+                                                                      self.company_name)
         if "IBISWorld" in self.selected_sources:
             company_info["IBISWorld Data"] = self._retry_request(self.ibisworld_fetcher.search_ibisworld,
                                                                  self.company_name)
@@ -101,9 +103,7 @@ class CompanyInfoFetcher:
                 "Stock Data": yahoo_finance_data  # Teraz zawiera daty
             }
 
-        if "GoogleTrends" in self.selected_sources:
-            company_info["Google Trends Image"] = self._retry_request(self.google_trends_fetcher.fetch_google_trends,
-                                                                      self.company_name)
+
 
         if "GoogleSearch" in self.selected_sources:
             company_info["Google Search Results"] = self._retry_request(self.google_search_fetcher.google_search,

@@ -245,7 +245,35 @@
                 <p>No Yahoo Finance data available.</p>
             {% endif %}
         </section>
-
+        <section class="section">
+            <h2>VirusTotal Data</h2>
+            {% if 'VirusTotal Data' in company_info %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Harmless</th>
+                            <th>Malicious</th>
+                            <th>Suspicious</th>
+                            <th>Undetected</th>
+                            <th>Scan Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ company_info['VirusTotal Data']['URL'] }}</td>
+                            <td>{{ company_info['VirusTotal Data']['Harmless'] }}</td>
+                            <td>{{ company_info['VirusTotal Data']['Malicious'] }}</td>
+                            <td>{{ company_info['VirusTotal Data']['Suspicious'] }}</td>
+                            <td>{{ company_info['VirusTotal Data']['Undetected'] }}</td>
+                            <td>{{ company_info['VirusTotal Data']['Scan Date'] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No VirusTotal data available for this company.</p>
+            {% endif %}
+        </section>
 
         <!-- Shodan Data Section -->
         <section class="section">
@@ -376,7 +404,7 @@ SSL Certificate: {{ port_info['SSL Certificate'] }}</pre>
 
         <!-- IBISWorld Data Section -->
         <section class="section">
-            <h2>IBISWorld Data</h2>
+            <h2>IBISWorld and Crunchbase Data</h2>
             {% if company_info['IBISWorld Data'] %}
                 <ul class="stat-list">
                     {% for title, link in company_info['IBISWorld Data'] %}

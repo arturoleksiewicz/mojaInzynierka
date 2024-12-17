@@ -31,8 +31,7 @@ class HackerTargetFetcher:
         target_domain = f"{company_name.lower()}.com"  # Przyjmuje, że domena to nazwa_firmy.com
 
         functions = [
-            "hostsearch", "nmap", "traceroute", "ping",
-            "dnslookup", "whois", "geoip", "reversedns"
+            "hostsearch","dnslookup", "geoip", "reversedns"
         ]
 
         results = {}
