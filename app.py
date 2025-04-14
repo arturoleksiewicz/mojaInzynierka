@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, send_file, make_response, ses
 from company_info_fetcher import CompanyInfoFetcher
 from linkedin_formatter import format_linkedin_data
 import os
-from io import BytesIO
-import pdfkit
 
 app = Flask(__name__)
 app.secret_key = '1234'  # Ensure you set a secret key for sessions
@@ -13,9 +11,14 @@ app.secret_key = '1234'  # Ensure you set a secret key for sessions
 def is_list(value):
     return isinstance(value, list)
 
+app = Flask(__name__)
+app.secret_key = '1234'  # Ensure you set a secret key for sessions
+
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # Sprawdź status pobrania raportu
+    report_downloaded = session.pop('report_downloaded', False)
+    return render_template('index.html', report_downloaded=report_downloaded)
 
 @app.route('/fetch_info', methods=['POST'])
 def fetch_info():
@@ -23,11 +26,11 @@ def fetch_info():
     selected_sources = request.form.getlist('sources')
     analyze_sentiment = 'analyze_sentiment' in request.form
     summarize_news = 'summarize_news' in request.form
+    download_report = 'download_report' in request.form
 
     fetcher = CompanyInfoFetcher(company_name, selected_sources, analyze_sentiment, summarize_news)
     company_info = fetcher.fetch_all_info()
 
-    # Format LinkedIn data for rendering
     linkedin_data = format_linkedin_data(company_info.get('LinkedIn Data', {}))
     news_data = company_info.get('News Data', [])
     google_search_results = company_info.get('Google Search Results', [])
@@ -35,11 +38,9 @@ def fetch_info():
     trustpilot_data = company_info.get('Trustpilot Data', [])
     if isinstance(trustpilot_data, str):
         trustpilot_data = []
-    session['company_info'] = company_info
-    session['company_name'] = company_name
 
-    # Render the results page
-    return render_template(
+    # Render results.html into a string
+    rendered_html = render_template(
         'results.html',
         company_name=company_name,
         linkedin_data=linkedin_data,
@@ -49,6 +50,18 @@ def fetch_info():
         company_info=company_info,
         trustpilot_data=trustpilot_data,
     )
+
+    # If the user wants to download the report
+    if download_report:
+        session['report_downloaded'] = True
+        response = make_response(rendered_html)
+        response.headers['Content-Disposition'] = f'attachment; filename="{company_name}_report.html"'
+        response.headers['Content-Type'] = 'text/html'
+        return response
+
+    # If not downloading, render results.html in the browser
+    return rendered_html
+
 
 
 @app.route('/static/<path:filename>')

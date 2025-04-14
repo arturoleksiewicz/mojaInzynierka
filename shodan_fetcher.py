@@ -1,6 +1,6 @@
 import shodan
 import socket
-
+from urllib.parse import quote
 
 class ShodanFetcher:
     def __init__(self, api_key):
@@ -8,6 +8,7 @@ class ShodanFetcher:
 
     def fetch_shodan_info(self, company_name):
         # Convert company name to lowercase and append ".com" to form the domain
+        company_name = quote(company_name)
         domain = f"{company_name.lower()}.com"
 
         try:

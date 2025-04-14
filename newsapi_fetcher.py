@@ -1,24 +1,15 @@
-from textblob import TextBlob
+from transformers import pipeline
 import requests
 from bs4 import BeautifulSoup
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
 import re
 
-from transformers import pipeline
-
-
 class NewsAPIFetcher:
-    def __init__(self, api_key, analyze_sentiment=False, summarize_articles=False, use_advanced_summarizer=False):
+    def __init__(self, api_key, analyze_sentiment=False, summarize_articles=False):
         self.api_key = api_key
-        self.analyze_sentiment = analyze_sentiment  # Analyze sentiment flag
-        self.summarize_articles = summarize_articles  # Summarize articles flag
-        self.use_advanced_summarizer = use_advanced_summarizer  # Use transformers summarizer if True
-
-        # Initialize the transformers summarizer if advanced summarization is enabled
-        if self.use_advanced_summarizer:
-            self.summarizer = pipeline("summarization")
+        self.analyze_sentiment = analyze_sentiment
+        self.summarize_articles = summarize_articles
+        self.summarizer = pipeline("summarization") if summarize_articles else None
+        self.sentiment_analyzer = pipeline("sentiment-analysis") if analyze_sentiment else None
 
     def fetch_news(self, search_phrase, max_results=10):
         url = f"https://newsapi.org/v2/everything?q={search_phrase}&apiKey={self.api_key}"
@@ -47,8 +38,12 @@ class NewsAPIFetcher:
                 if not content.strip() or "removed" in content.lower() or "coming soon" in content.lower():
                     continue
 
+                # Perform sentiment analysis if enabled
                 sentiment = self.perform_sentiment_analysis(content) if self.analyze_sentiment else "Not analyzed"
-                summary = self.summarize_article(content) if self.summarize_articles else content
+
+                # Summarize article if enabled
+                summary = self.summarize_article(content) if self.summarize_articles else "Not summarized"
+
                 articles.append({
                     "url": url,
                     "title": title,
@@ -78,28 +73,15 @@ class NewsAPIFetcher:
         return content
 
     def perform_sentiment_analysis(self, text):
-        analysis = TextBlob(text)
-        sentiment_score = analysis.sentiment.polarity
-        if sentiment_score > 0:
-            return "Positive"
-        elif sentiment_score < 0:
-            return "Negative"
-        else:
-            return "Neutral"
+        if self.sentiment_analyzer:
+            sentiment_results = self.sentiment_analyzer(text[:512])  # Use only the first 512 tokens for analysis
+            if sentiment_results:
+                return sentiment_results[0]["label"]
+        return "Unknown"
 
     def summarize_article(self, text):
-        if self.use_advanced_summarizer:
-            return self.advanced_summarization(text)
-        else:
-            return self.simple_summarization(text)
+        if self.summarizer:
+            summary = self.summarizer(text, max_length=100, min_length=30, do_sample=False)
+            return summary[0]['summary_text'] if summary else "Summary not available"
+        return "Summary not available"
 
-    def simple_summarization(self, text):
-        parser = PlaintextParser.from_string(text, Tokenizer("english"))
-        summarizer = LsaSummarizer()
-        summary_sentences = summarizer(parser.document, 4)
-        summary = " ".join([str(sentence) for sentence in summary_sentences])
-        return summary
-
-    def advanced_summarization(self, text):
-        summary = self.summarizer(text, max_length=100, min_length=30, do_sample=False)
-        return summary[0]['summary_text']

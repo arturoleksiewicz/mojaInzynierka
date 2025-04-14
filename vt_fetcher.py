@@ -1,6 +1,7 @@
-# vt_fetcher.py
 import requests
 import base64
+from datetime import datetime  # Import modułu datetime
+
 
 class VirusTotalFetcher:
     def __init__(self, api_key):
@@ -27,15 +28,30 @@ class VirusTotalFetcher:
         # Sprawdzanie odpowiedzi
         if response.status_code == 200:
             data = response.json()
+
+            # Pobranie daty skanu i jej konwersja do formatu czytelnego dla człowieka
+            scan_timestamp = data.get("data", {}).get("attributes", {}).get("last_analysis_date", None)
+            if scan_timestamp:
+                scan_date = datetime.utcfromtimestamp(scan_timestamp).strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                scan_date = "Data not available"
+
             # Extract relevant data from the response
             scan_data = {
                 "URL": url,
-                "Harmless": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("harmless", "Data not available"),
-                "Malicious": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("malicious", "Data not available"),
-                "Suspicious": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("suspicious", "Data not available"),
-                "Undetected": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("undetected", "Data not available"),
-                "Scan Date": data.get("data", {}).get("attributes", {}).get("last_analysis_date", "Data not available")
+                "Harmless": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("harmless",
+                                                                                                          "Data not available"),
+                "Malicious": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get("malicious",
+                                                                                                           "Data not available"),
+                "Suspicious": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get(
+                    "suspicious", "Data not available"),
+                "Undetected": data.get("data", {}).get("attributes", {}).get("last_analysis_stats", {}).get(
+                    "undetected", "Data not available"),
+                "Scan Date": scan_date
             }
             return scan_data
         else:
-            return {"Error": f"Nie udało się sprawdzić strony {url}. Kod odpowiedzi: {response.status_code}", "Details": response.text}
+            return {
+                "Error": f"Nie udało się sprawdzić strony {url}. Kod odpowiedzi: {response.status_code}",
+                "Details": response.text
+            }

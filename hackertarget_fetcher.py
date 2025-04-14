@@ -1,5 +1,5 @@
 import requests
-
+from urllib.parse import quote
 def hackertarget_tool(option, target):
     base_url = "https://api.hackertarget.com"
     endpoints = {
@@ -12,7 +12,7 @@ def hackertarget_tool(option, target):
     if option not in endpoints:
         return f"Nieprawidłowa opcja: {option}"
 
-    url = f"{base_url}{endpoints[option]}?q={target}"
+    url = f"{base_url}{endpoints[option]}?q={quote(target)}"
     try:
         response = requests.get(url)
         if response.status_code == 200:

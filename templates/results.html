@@ -12,6 +12,20 @@
             margin: 0;
             padding: 20px;
         }
+        .download-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #0056b3;
+            text-decoration: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-button:hover {
+            background-color: #004494;
+        }
 
         .container {
             max-width: 1000px;
@@ -434,6 +448,10 @@ SSL Certificate: {{ port_info['SSL Certificate'] }}</pre>
                 <p>No X.com tweets available.</p>
             {% endif %}
         </section>
+
     </div>
+
+
+
 </body>
 </html>

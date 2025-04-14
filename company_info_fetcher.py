@@ -1,4 +1,3 @@
-
 import random
 import time
 import requests
@@ -16,7 +15,7 @@ from twitter_scraper import scrape_recent_tweets
 from shodan_fetcher import ShodanFetcher
 from hackertarget_fetcher import HackerTargetFetcher
 from vt_fetcher import VirusTotalFetcher
-
+import os
 
 warnings.filterwarnings('ignore', category=UserWarning, module='bs4')
 warnings.filterwarnings('ignore', category=FutureWarning, module='transformers')
@@ -100,7 +99,7 @@ class CompanyInfoFetcher:
             company_info["Yahoo Finance Data"] = {
                 "Matched Company Name": matched_company_name,
                 "Ticker Symbol": ticker_symbol,
-                "Stock Data": yahoo_finance_data  # Teraz zawiera daty
+                "Stock Data": yahoo_finance_data
             }
 
 
