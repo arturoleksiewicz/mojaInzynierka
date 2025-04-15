@@ -8,7 +8,6 @@ class CensysFetcher:
         self.secret = secret
 
     def get_host_data(self, company_name):
-        # Zamiana nazwy firmy na małe litery i dodanie ".com"
         company_domain = f"{company_name.lower()}.com"
 
         url = "https://search.censys.io/api/v2/hosts/search"
@@ -27,7 +26,6 @@ class CensysFetcher:
             hits = data.get('result', {}).get('hits', [])
             host_data = []
             for result in hits:
-                # Pobranie szczegółowych danych
                 ip = result.get('ip', 'N/A')
                 port = result.get('services', [{}])[0].get('port', 'N/A')
                 organization = result.get('autonomous_system', {}).get('description', 'N/A')
@@ -35,7 +33,6 @@ class CensysFetcher:
                 location = result.get('location', {})
                 operating_system = result.get('operating_system', {}).get('product', 'N/A')
 
-                # Dodanie dodatkowych informacji
                 host_data.append({
                     "IP": ip,
                     "Port": port,
@@ -53,8 +50,3 @@ class CensysFetcher:
         else:
             print("Error fetching data from Censys:", response.status_code, response.text)
             return []
-
-# Przykładowe użycie:
-# censys_fetcher = CensysFetcher(uid="YOUR_CENSYS_UID", secret="YOUR_CENSYS_SECRET")
-# data = censys_fetcher.get_host_data("tesla")
-# print(data)

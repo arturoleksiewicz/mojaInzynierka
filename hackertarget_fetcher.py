@@ -28,8 +28,7 @@ def hackertarget_tool(option, target):
 
 class HackerTargetFetcher:
     def run_all_hackertarget_functions(self, company_name):
-        target_domain = f"{company_name.lower()}.com"  # Przyjmuje, że domena to nazwa_firmy.com
-
+        target_domain = f"{company_name.lower()}.com"
         functions = [
             "hostsearch","dnslookup", "geoip", "reversedns"
         ]

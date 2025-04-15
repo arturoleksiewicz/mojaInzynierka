@@ -8,8 +8,6 @@ from textblob import TextBlob
 from langdetect import detect
 from transformers import pipeline
 import os
-
-# Download necessary NLTK data
 nltk.download('punkt')
 nltk.download('stopwords')
 
@@ -18,7 +16,6 @@ class NewsSentimentAnalyzer:
     def __init__(self, api_key):
         self.api_key = api_key
         try:
-            # Use a specific model for the summarizer, like BART or T5
             self.summarizer = pipeline('summarization', model="facebook/bart-large-cnn")
         except Exception as e:
             print(f"Failed to load summarizer model: {e}")
@@ -44,13 +41,13 @@ class NewsSentimentAnalyzer:
 
     def analyze_sentiment(self, text):
         if not text:
-            return 0.0, 0.0  # Neutral sentiment if the content is empty or None
+            return 0.0, 0.0
 
         try:
             language = detect(text)
         except Exception as e:
             print(f"Language detection failed: {e}")
-            language = 'en'  # Default to English if language detection fails
+            language = 'en'
 
         processed_text = self.preprocess_text(text, language)
         sentiment = TextBlob(processed_text).sentiment
@@ -81,16 +78,3 @@ class NewsSentimentAnalyzer:
 
         return results
 
-
-# Example usage
-if __name__ == "__main__":
-    # Fetch your API key from environment variables
-    API_KEY = os.getenv("NEWS_API_KEY", "6225ddb8a62e48b499e22f8614264114")  # Replace with your key
-    analyzer = NewsSentimentAnalyzer(API_KEY)
-    search_phrase = "Panasonic"
-    sentiments = analyzer.analyze_news_sentiments(search_phrase)
-    for title, summary, polarity, subjectivity in sentiments:
-        print(f"Title: {title}")
-        print(f"Summary: {summary}")
-        print(f"Sentiment Polarity: {polarity}")
-        print(f"Sentiment Subjectivity: {subjectivity}\n")

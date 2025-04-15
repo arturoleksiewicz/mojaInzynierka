@@ -4,19 +4,17 @@ from linkedin_formatter import format_linkedin_data
 import os
 
 app = Flask(__name__)
-app.secret_key = '1234'  # Ensure you set a secret key for sessions
+app.secret_key = '1234'
 
-# Custom filter to check if a variable is a list
 @app.template_filter('is_list')
 def is_list(value):
     return isinstance(value, list)
 
 app = Flask(__name__)
-app.secret_key = '1234'  # Ensure you set a secret key for sessions
+app.secret_key = '1234'
 
 @app.route('/')
 def index():
-    # Sprawdź status pobrania raportu
     report_downloaded = session.pop('report_downloaded', False)
     return render_template('index.html', report_downloaded=report_downloaded)
 
@@ -39,7 +37,6 @@ def fetch_info():
     if isinstance(trustpilot_data, str):
         trustpilot_data = []
 
-    # Render results.html into a string
     rendered_html = render_template(
         'results.html',
         company_name=company_name,
@@ -51,7 +48,6 @@ def fetch_info():
         trustpilot_data=trustpilot_data,
     )
 
-    # If the user wants to download the report
     if download_report:
         session['report_downloaded'] = True
         response = make_response(rendered_html)
@@ -59,7 +55,6 @@ def fetch_info():
         response.headers['Content-Type'] = 'text/html'
         return response
 
-    # If not downloading, render results.html in the browser
     return rendered_html
 
 

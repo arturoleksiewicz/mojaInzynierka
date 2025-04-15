@@ -1,25 +1,20 @@
 import requests
 from bs4 import BeautifulSoup
-
+import os
 
 class StatistaFetcher:
-    def __init__(self, serpapi_api_key="e4017084ad01edc1cad1f43656c4551b6723ef1e76f6cb6e208cd7d0a2291587"):
-        # Ustawiamy domyślny klucz API, jeśli nie został podany
+    def __init__(self, serpapi_api_key=None):
         if serpapi_api_key is None:
-            # Możesz tutaj wprowadzić swój klucz API lub odczytać ze zmiennej środowiskowej,
-            # np.: serpapi_api_key = os.getenv("SERPAPI_API_KEY")
-            serpapi_api_key = "<YOUR_SERPAPI_API_KEY>"
+            serpapi_api_key = os.getenv("serpapi")
         self.serpapi_api_key = serpapi_api_key
 
     def search_statista(self, company_name):
-        # Budujemy zapytanie z ograniczeniem do statista.com
         query = f"{company_name} site:statista.com"
         url = "https://serpapi.com/search"
         params = {
             "engine": "google",
             "q": query,
             "api_key": self.serpapi_api_key
-            # Opcjonalnie można dodać np. "hl": "pl" dla wyszukiwania w języku polskim
         }
 
         response = requests.get(url, params=params)
@@ -27,7 +22,6 @@ class StatistaFetcher:
             return f"Failed to retrieve search results. Status code: {response.status_code}"
 
         data = response.json()
-        # Wyniki organiczne z SerpApi są przechowywane w polu "organic_results"
         search_results = []
         organic_results = data.get("organic_results", [])
         for result in organic_results:

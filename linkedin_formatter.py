@@ -29,7 +29,6 @@ def format_linkedin_data(data):
 
     return formatted_data
 
-
 def display_linkedin_data(data):
     formatted_data = format_linkedin_data(data)
 

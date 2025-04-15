@@ -7,16 +7,13 @@ class ShodanFetcher:
         self.api = shodan.Shodan(api_key)
 
     def fetch_shodan_info(self, company_name):
-        # Convert company name to lowercase and append ".com" to form the domain
         company_name = quote(company_name)
         domain = f"{company_name.lower()}.com"
 
         try:
-            # Resolve the IP address for the generated domain
             ip_address = socket.gethostbyname(domain)
             info = self.api.host(ip_address)
 
-            # Extract and structure extended Shodan data
             shodan_data = {
                 "IP": info.get('ip_str', 'Data not available'),
                 "Country": info.get('country_name', 'Data not available'),
@@ -39,8 +36,6 @@ class ShodanFetcher:
                 ],
                 "Open Ports": []
             }
-
-            # Collect detailed service information for each open port
             for service in info.get('data', []):
                 port_info = {
                     "Port": service.get('port', 'Data not available'),

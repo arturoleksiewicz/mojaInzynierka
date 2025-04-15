@@ -29,10 +29,10 @@ class CompanyInfoFetcher:
         if "GoogleTrends" in selected_sources:
             self.google_trends_fetcher = GoogleTrendsFetcher()
         if "IBISWorld" in selected_sources:
-            self.ibisworld_fetcher = IbisWorldFetcher(serp_api_key="e4017084ad01edc1cad1f43656c4551b6723ef1e76f6cb6e208cd7d0a2291587")
+            self.ibisworld_fetcher = IbisWorldFetcher(serp_api_key=os.getenv("serpapi"))
 
         if "LinkedIn" in selected_sources:
-            self.linkedin_fetcher = LinkedinFetcher(username="artur.oleksiewicz.work@gmail.com", password="Sto1noga$")
+            self.linkedin_fetcher = LinkedinFetcher(username=os.getenv("linkedinEmail"), password=os.getenv("linkedinPass"))
 
         if "Statista" in selected_sources:
             self.statista_fetcher = StatistaFetcher()
@@ -47,10 +47,10 @@ class CompanyInfoFetcher:
 
         if "GoogleSearch" in selected_sources:
             self.google_search_fetcher = GoogleSearchFetcher(
-                api_key="e4017084ad01edc1cad1f43656c4551b6723ef1e76f6cb6e208cd7d0a2291587")
+                api_key=os.getenv("serpapi"))
 
         if "News" in selected_sources:
-            self.news_api_fetcher = NewsAPIFetcher(api_key="6225ddb8a62e48b499e22f8614264114",
+            self.news_api_fetcher = NewsAPIFetcher(api_key=os.getenv("newsKey"),
                                                    analyze_sentiment=self.analyze_sentiment,
                                                    summarize_articles=self.summarize_articles)
 
@@ -58,10 +58,10 @@ class CompanyInfoFetcher:
             self.wikipedia_fetcher = WikipediaFetcher()
 
         if "X.com" in selected_sources:
-            self.twitter_username = company_name  # Assuming the company_name is the Twitter username
+            self.twitter_username = company_name
 
         if "Shodan" in selected_sources:
-            self.shodan_fetcher = ShodanFetcher(api_key="JGoNDkBK729GYLe0ofEVYtQvHuE6FBmV")
+            self.shodan_fetcher = ShodanFetcher(api_key=os.getenv("shodan"))
 
         if "HackerTarget" in selected_sources:
             self.hackertarget_fetcher = HackerTargetFetcher()
@@ -69,7 +69,7 @@ class CompanyInfoFetcher:
 
         if "VirusTotal" in selected_sources:
             self.virustotal_fetcher = VirusTotalFetcher(
-                api_key="964657e55676c6ab97a21a9e8cda62fad825c3c2b8d30306822653b7a661fa90")
+                api_key=os.getenv("vt"))
 
     def fetch_all_info(self):
         company_info = {}
@@ -138,7 +138,7 @@ class CompanyInfoFetcher:
             except requests.exceptions.HTTPError as e:
                 if e.response.status_code == 429:
                     print(f"Too many requests error on attempt {attempt + 1}. Retrying after delay...")
-                    time.sleep(2 ** attempt + random.random())  # Exponential backoff with random jitter
+                    time.sleep(2 ** attempt + random.random())
                 else:
                     print(f"An unexpected HTTP error occurred: {e}")
                     break

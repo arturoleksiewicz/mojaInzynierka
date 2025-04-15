@@ -22,7 +22,6 @@ class NewsAPIFetcher:
                 f"Request returned an error: {response.status_code} {response.text}"
             )
 
-        # Filter and collect valid articles
         articles = []
         count = 0
         for article in news_articles["articles"]:
@@ -34,14 +33,11 @@ class NewsAPIFetcher:
 
             try:
                 content = self.extract_article_content(url)
-                # Check if content is valid
                 if not content.strip() or "removed" in content.lower() or "coming soon" in content.lower():
                     continue
 
-                # Perform sentiment analysis if enabled
                 sentiment = self.perform_sentiment_analysis(content) if self.analyze_sentiment else "Not analyzed"
 
-                # Summarize article if enabled
                 summary = self.summarize_article(content) if self.summarize_articles else "Not summarized"
 
                 articles.append({
@@ -51,9 +47,8 @@ class NewsAPIFetcher:
                     "summary": summary,
                     "sentiment": sentiment
                 })
-                count += 1  # Increment count only for valid articles
+                count += 1
             except Exception as e:
-                # Log or print exception if necessary
                 print(f"Error processing article: {title}, URL: {url}, Error: {e}")
 
         return articles
@@ -67,14 +62,13 @@ class NewsAPIFetcher:
         return self.preprocess_content(article_content)
 
     def preprocess_content(self, content):
-        # Remove URLs and certain irrelevant keywords (adjust according to your needs)
-        content = re.sub(r'http\S+', '', content)  # Remove URLs
-        content = re.sub(r'(iPhone|IFA 2024)', '', content)  # Example: Remove unrelated product names
+        content = re.sub(r'http\S+', '', content)
+        content = re.sub(r'(iPhone|IFA 2024)', '', content)
         return content
 
     def perform_sentiment_analysis(self, text):
         if self.sentiment_analyzer:
-            sentiment_results = self.sentiment_analyzer(text[:512])  # Use only the first 512 tokens for analysis
+            sentiment_results = self.sentiment_analyzer(text[:512])
             if sentiment_results:
                 return sentiment_results[0]["label"]
         return "Unknown"

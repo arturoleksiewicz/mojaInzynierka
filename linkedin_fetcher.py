@@ -23,7 +23,6 @@ class LinkedinFetcher:
             company_data = self.api.get_company(company_name)
             return company_data
         except LinkedinSessionExpired:
-            # Re-authenticate and try again
             self.api = self.authenticate()
             try:
                 company_data = self.api.get_company(company_name)
